@@ -10,7 +10,7 @@ var configuration = builder.Configuration;
 
 // Configure the DbContext with MySQL
 builder.Services.AddDbContext<SalesWebMvcContext>(options =>
-    options.UseMySql(configuration.GetConnectionString("SalesWebMvcContext"), new MySqlServerVersion(new Version(8, 0, 21))));
+    options.UseMySql(configuration.GetConnectionString("SalesWebMvcContext"), new MySqlServerVersion(new Version(8, 0, 39))));
 
 // Register services with the appropriate lifetimes
 builder.Services.AddTransient<SeedingService>();

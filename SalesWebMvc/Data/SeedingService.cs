@@ -13,7 +13,7 @@ public class SeedingService
 
     public async Task SeedAsync()
     {
-        if (_context.Department.Any() || _context.Sellers.Any() || _context.SalesRecords.Any())
+        if (_context.Department.Any() || _context.Seller.Any() || _context.SalesRecords.Any())
         {
             return; // DB has been seeded
         }
@@ -49,7 +49,7 @@ public class SeedingService
 
         // Add Departments, Sellers and Sales Records to the context
         _context.Department.AddRange(d1, d2, d3, d4, d5, d6);
-        _context.Sellers.AddRange(s1, s2, s3, s4, s5, s6, s7);
+        _context.Seller.AddRange(s1, s2, s3, s4, s5, s6, s7);
         _context.SalesRecords.AddRange(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10);
 
         await _context.SaveChangesAsync();

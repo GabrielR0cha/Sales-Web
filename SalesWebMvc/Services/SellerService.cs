@@ -15,7 +15,7 @@ public class SellerService
 
     public List<Seller> FindAll()
     {
-        return _context.Sellers.ToList();
+        return _context.Seller.ToList();
     }
 
     public void Insert(Seller obj)
@@ -25,4 +25,15 @@ public class SellerService
         _context.SaveChanges();
     }
 
+    public Seller FindById(int id)
+    {
+        return _context.Seller.FirstOrDefault(obj => obj.Id == id);
+    }
+
+    public void Remove(int id)
+    {
+        var obj = _context.Seller.Find(id);
+        _context.Remove(obj);
+        _context.SaveChanges();
+    }
 }
