@@ -1,12 +1,34 @@
+
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using SalesWebMvc.Data;
 using SalesWebMvc.Services;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Access configuration from appsettings.json
 var configuration = builder.Configuration;
+
+// Configure localization options
+var enUs = new CultureInfo("en-US");
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(enUs),
+    SupportedCultures = new List<CultureInfo> { enUs },
+    SupportedUICultures = new List<CultureInfo> { enUs }
+};
+
+// Add services to the container
+builder.Services.AddLocalization();
+builder.Services.AddControllersWithViews();
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = localizationOptions.DefaultRequestCulture;
+    options.SupportedCultures = localizationOptions.SupportedCultures;
+    options.SupportedUICultures = localizationOptions.SupportedUICultures;
+});
 
 // Configure the DbContext with MySQL
 builder.Services.AddDbContext<SalesWebMvcContext>(options =>
@@ -17,10 +39,6 @@ builder.Services.AddTransient<SeedingService>();
 builder.Services.AddScoped<SellerService>();
 builder.Services.AddScoped<DepartmentService>();
 
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
 var app = builder.Build();
 
 // Ensure to run the seed method asynchronously
@@ -30,7 +48,7 @@ using (var scope = app.Services.CreateScope())
     await seeder.SeedAsync(); // Make sure to await this async method
 }
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -39,9 +57,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 app.UseAuthorization();
 
 app.MapControllerRoute(
